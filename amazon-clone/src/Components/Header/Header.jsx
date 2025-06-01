@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoSearch } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import classes from "./Header.module.css";
 import LowerHeader from "./Lowerheader";
+import { DataContext } from "../Dataprovider/Dataprovider";
+import { auth } from "../utility/firebase";
 function Header() {
+	const [{ user,basket }, dispatch] = useContext(DataContext);
+	const totalItem = basket?.reduce((amount, item) => item.amount + amount, 0);
 	return (
-		<>
+		<section className={classes.fixed}>
 			<div className={classes.header_container}>
 				<div className={classes.logo_container}>
-					<a href="/">
+					<Link to="/">
 						<img
 							src="https://pngimg.com/uploads/amazon/amazon_PNG11.png"
 							alt="amazon logo"
+							style={{ width: "100px" }}
 						/>
-					</a>
+					</Link>
 					<div className={classes.delivery}>
 						<span>
 							<IoLocationOutline />
@@ -30,7 +36,7 @@ function Header() {
 						<option value="">All</option>
 					</select>
 					<input type="text" name="" id="" placeholder="Search products" />
-					<IoSearch size={25} />
+					<IoSearch size={38} />
 				</div>
 				<div className={classes.order_container}>
 					<a href="" className={classes.language}>
@@ -45,24 +51,35 @@ function Header() {
 					</a>
 
 					{/* three components */}
-					<a href="">
-						<p>Sign in</p>
-						<span>Account & Lists</span>
-					</a>
+					<Link to={!user && "/auth"}>
+						<div>
+							{user ? (
+								<>
+									<p>Hello {user?.email?.split("@")[0]}</p>
+									<span onClick={()=>auth.signOut()}>signOut</span>
+								</>
+							) : (
+								<>
+									<p> Hello, Sign in</p>
+									<span>Account & Lists</span>
+								</>
+							)}
+						</div>
+					</Link>
 
-					<a href="">
+					<Link to="/orders">
 						<p>returns</p>
 						<span> & orders</span>
-					</a>
+					</Link>
 
-					<a href="" className={classes.cart}>
+					<Link to="/cart" className={classes.cart}>
 						<FiShoppingCart size={35} />
-						<span>0</span>
-					</a>
+						<span>{totalItem}</span>
+					</Link>
 				</div>
 			</div>
-			<LowerHeader/>
-		</>
+			<LowerHeader />
+		</section>
 	);
 }
 

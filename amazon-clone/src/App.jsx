@@ -1,12 +1,35 @@
-
-import React from 'react'
+import React,{useContext,useEffect} from "react";
 import "./App.css";
-import Header from './Components/Header/Header';
+import Routing from "./Router";
+import { DataContext } from "./Components/Dataprovider/Dataprovider";
+import {auth} from "./Components/utility/firebase"
+import{Type} from "./Components/utility/action.type"
 
-const App = () => {
-  return (
-    <div><Header/></div>
-  )
+function App() {
+	const[{user}, dispatch]=useContext(DataContext)
+	useEffect(() => {
+		auth.onAuthStateChanged((authUser) => {
+			if (authUser) {
+				// console.log(authUser);
+				dispatch({
+					type:Type.SET_USER,
+					user:authUser
+				})
+			}else{
+				dispatch({
+					type:Type.SET_USER,
+					User:null,
+				})
+			}
+		});
+	}, []);
+	return (
+		
+		<div>
+			
+			<Routing />
+		</div>
+	);
 }
 
-export default App
+export default App;
