@@ -4,7 +4,7 @@ import { IoLocationOutline } from "react-icons/io5";
 import { IoSearch } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import classes from "./Header.module.css";
-import LowerHeader from "./Lowerheader";
+import LowerHeader from "./LowerHeader";
 import { DataContext } from "../Dataprovider/Dataprovider";
 import { auth } from "../utility/firebase";
 function Header() {
